@@ -1,0 +1,77 @@
+requirements for our backend and api's
+
+we are a book management company 
+
+books
+ => isbn
+ => title
+ => published date
+ => language
+ => num page
+ => author[] (there can be one author and many author for that we are using array)
+ => category[]
+
+Authors
+ => id
+ => name 
+ => books[]
+
+Publications ( means the books selling company )
+ => id 
+ => name
+ => books[]
+
+
+________________________________________________Tasks____________________________________________________________________________________________________________
+
+so what are all the API's that we needed
+
+Books  // GET API 
+ we need an API for 
+ => to get all books    // done
+ => to get specific books   // done
+ => to get list of books based on category  // done
+ => to get list of books based on languages  // done
+
+ POST APT
+ => add new book // done
+
+ PUT API
+ => update book title // done
+ => update / add new author //done
+ 
+ DELETE API 
+ => delete a book // done
+ => delete an author from the book and delete a book form the author's book // done
+-------------------------------------------------------------------------------------- authors
+Authors // GET API 
+ we need an API for 
+ => to get all Authors  // done
+ => to get specific author  // done
+ => to get list of authors based on books  // done
+
+ POST API 
+ => add new author // done
+
+ PUT API
+ => update author name //done
+ 
+ DELETE API 
+ => delete an author // done
+---------------------------------------------------------------------------------------publications
+Publications
+ we need an API for
+ => to get all Publications  // done
+ => to get specific Publications // done
+ => to get list of publication based on books  // done
+
+ POST API 
+ => add new publications // done
+
+ PUT API
+ => update publications name // done
+ => update/add a books to  publications // done
+ 
+ DELETE API 
+ => delete a publication // done
+ => delete a book form publication // done
