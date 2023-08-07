@@ -13,7 +13,7 @@ const BookSchema = mongoose.Schema({
 });
 
 // convert to model 
-const BookModel = mongoose.model(BookSchema);
+const BookModel = mongoose.model("books",BookSchema);
 
 // export 
 module.exports = BookModel;

@@ -77,23 +77,33 @@
 }
 // dotenv registration 
 require("dotenv").config();
+
 // what is used to create a server 
 // express is used to create a server 
 // to use express 1st require express form node
 const express = require("express");
+
 //2nd after required the express use the express
 const threads = express();
+
 // 3rd after using the express we have to tell the express to learn the json becouse we are sending and receiving the data in json format 
 threads.use(express.json());
+
 // getting the database data 
 const database = require("./database/index");
 
-
 // mongoose 
 const mongoose = require("mongoose");
+
 // establish the connection to mongodb
 mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log("Database Connection established"));
+
+// import modals (schema models) 
+const BookModel = require("./database/book");
+const AuthorModel = require("./database/author");
+const PublicationModel = require("./database/publication");
+
 //-------------------------------------------------------books--------------------------------------------------------------------------------------------
 
 /* 
