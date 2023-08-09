@@ -113,10 +113,16 @@ Access - PUBLIC
 Parameter - NONE
 Methods - GET
 */
-threads.get('/books', (req, res) =>{
-    return res.json({data : database.books})
-});
+// this api is for the database that we created in index.js file
+// threads.get('/books', (req, res) =>{
+//     return res.json({data : database.books})
+// });
 
+// this api is for get all books form out mongodb
+threads.get('/books', async (req, res) =>{
+    const getAllBooks = await BookModel.find();
+    return res.json(getAllBooks);
+});
 
 /* 
 Route - /
@@ -125,12 +131,12 @@ Access - PUBLIC
 Parameter - isbn
 Methods - GET
 */
-threads.get('/:isbn', (req, res) => {
+threads.get('/:isbn', async (req, res) => {
     const id = req.params.isbn;
-    const books = database.books;
-   const getSpecificBook = books.filter((book) => book.ISBN === id);
-
-   if(getSpecificBook.length  === 0 ){
+//     const books = database.books;
+//    const getSpecificBook = books.filter((book) => book.ISBN === id);
+ const getSpecificBook = await BookModel.findOne({ISBN : req.params.isbn});
+   if(!getSpecificBook){
     return res.json(`error : dei makku kuthi inga oru puthagamum ella for this isbn ${id}`);
    };
 
@@ -144,13 +150,13 @@ Access - PUBLIC
 Parameter - category
 Methods - GET
 */
-threads.get('/c/:category', (req, res) => {
+threads.get('/c/:category', async (req, res) => {
     const category = req.params.category;
-    const getBooks = database.books;
-    const getCategory = getBooks.filter((booksdata) => booksdata.category.includes(category));
-    
-    if(getCategory.length === 0){
-        return res.json(" error :intha category la oruu pulum ella")
+    // const getBooks = database.books;
+    // const getCategory = getBooks.filter((booksdata) => booksdata.category.includes(category));
+    const getCategory = await BookModel.findOne({category: req.params.category});
+    if(!getCategory){
+        return res.json(` error :intha category ${category} la oruu pulum ella`)
     }
     return res.json({details : getCategory})
 })
@@ -180,11 +186,12 @@ Access - PUBLIC
 Parameter - none
 Methods - POST
 */
-threads.post('/books/addnew', (req, res) => {
+threads.post('/books/addnew', async (req, res) => {
    // const newBook = req.body.newBook;
    const {newBook} = req.body; // both are same it is called destructre method 
-   database.books.push(newBook);
-   return res.json({books: database.books});
+  // database.books.push(newBook);
+   const addNewBook = await BookModel.create(newBook); 
+  return res.json({books: addNewBook});
 });
 
 
@@ -195,14 +202,27 @@ Access - PUBLIC
 Parameter - isbn
 Methods - PUT
 */
-threads.put('/book/update/title/:isbn', (req, res) => {
-    database.books.forEach((data) => {
-        if(data.ISBN === req.params.isbn){
-            data.title = req.body.newtitle;
-            return;
-        }
-    })
-    return res.json({books : database.books})
+threads.put('/book/update/title/:isbn', async (req, res) => {
+    // database.books.forEach((data) => {
+    //     if(data.ISBN === req.params.isbn){
+    //         data.title = req.body.newtitle;
+    //         return;
+    //     }
+    // });
+
+    // in mongodb form 
+    const updatedBookTitle = await BookModel.findOneAndUpdate(
+        { // to find the book with isbn
+            ISBN : req.params.isbn,
+        },
+        { // after finding the book update the book title
+            title: req.body.newTitle,
+        },
+        { // after updated the title => get the whole book with updated book title to achive that use new:true,
+            new: true,
+        },
+        );
+    return res.json({books : updatedBookTitle})
 });
 
 
@@ -290,8 +310,10 @@ Access - PUBLIC
 Parameter - NONE
 Methods - GET
 */
-threads.get('/authors/all', (req, res) => {
-    return res.json({data: database.authors})
+threads.get('/authors/all', async (req, res) => {
+   // return res.json({data: database.authors})
+   const allAuthors = await AuthorModel.find(); 
+   return res.json({allAuthors});
 });
 
 
@@ -338,10 +360,13 @@ Access - PUBLIC
 Parameter - none
 Methods - POST
 */
-threads.post('/authors/addnew', (req, res) => {
+threads.post('/authors/addnew', async (req, res) => {
     const {newAuthor} = req.body;
-    database.authors.push(newAuthor);
-    return res.json({newAuthors: database.authors});
+    //database.authors.push(newAuthor);
+    const addNewAuthor = AuthorModel.create(newAuthor);
+    // AuthorModel.create(newAuthor); it is also possible if we give this we have to only get message in res.json
+    // return res.json(message: "book was added");
+    return res.json({newAuthors: addNewAuthor});
 });
 
 
