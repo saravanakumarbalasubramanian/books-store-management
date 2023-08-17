@@ -233,25 +233,50 @@ Access - PUBLIC
 Parameter - isbn
 Methods - PUT
 */
-threads.put('/book/author/:isbn/:authorid', (req, res) => {
+threads.put('/book/author/:isbn/:authorid', async (req, res) => {
     const bookIsbn = req.params.isbn;
     const authorId = req.params.authorid;
     
-    database.books.forEach((data) => {
-        if(data.ISBN === bookIsbn){
-            data.author.push(parseInt(authorId))
-            return ;
-        };
+    // database.books.forEach((data) => {
+    //     if(data.ISBN === bookIsbn){
+    //         data.author.push(parseInt(authorId))
+    //         return ;
+    //     };
 
-    })
-
-    database.authors.forEach((data) => {
-       if(data.id === parseInt(authorId)){
-        data.books.push(bookIsbn);
-        return;
-       }
-    });
-    return res.json({bookdetails: database.books, authordetails: database.authors});
+    // })
+     const updateBookAuthor = await BookModel.findOneAndUpdate(
+        {
+              ISBN: bookIsbn,
+        },
+        {
+            $push: {
+                author : authorId,
+            },
+        },
+        {
+            new : true
+        },
+     );
+    // database.authors.forEach((data) => {
+    //    if(data.id === parseInt(authorId)){
+    //     data.books.push(bookIsbn);
+    //     return;
+    //    }
+    // });
+    const updateAuthorBookIsbn = await AuthorModel.findOneAndUpdate(
+        {
+            id : authorId,
+        },
+        {
+            $push : {
+                books: bookIsbn,
+            }
+        },
+        {
+            new: true
+        },
+    )
+    return res.json({bookdetails: updateBookAuthor, authordetails: updateAuthorBookIsbn, message: "added successfully"});
     
 });
 
@@ -263,12 +288,15 @@ Access - PUBLIC
 Parameter - isbn
 Methods - DELETE
 */
-threads.delete('/delete/book/:isbn', (req, res) => {
-  const updatedBooks =   database.books.filter(
-    (data) => data.ISBN !== req.params.isbn
-    );
-    database.books= updatedBooks;
-   return res.json({data: database.books})
+threads.delete('/delete/book/:isbn', async (req, res) => {
+//   const updatedBooks =   database.books.filter(
+//     (data) => data.ISBN !== req.params.isbn
+//     );
+//     database.books= updatedBooks;
+     const updatedBooks = await BookModel.findOneAndDelete({
+        ISBN : req.params.isbn,
+     });
+   return res.json({data: updatedBooks})
 });
 
 
