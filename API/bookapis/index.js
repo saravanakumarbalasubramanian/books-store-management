@@ -92,11 +92,20 @@ Parameter - none
 Methods - POST
 */
 Router.post('/addnew', async (req, res) => {
-   // const newBook = req.body.newBook;
-   const {newBook} = req.body; // both are same it is called destructre method 
-  // database.books.push(newBook);
-   const addNewBook = await BookModel.create(newBook); 
-  return res.json({books: addNewBook});
+//    // const newBook = req.body.newBook;
+//    const {newBook} = req.body; // both are same it is called destructre method 
+//   // database.books.push(newBook);
+//    const addNewBook = await BookModel.create(newBook); 
+//   return res.json({books: addNewBook});
+
+  // validate by mongoose 
+  try{
+    const {newBook} = req.body;
+    const addNewBook = await BookModel.create(newBook); 
+    return res.json({books: addNewBook});
+  }catch(error){
+    return res.json({error: error.message});
+  };
 });
 
 
