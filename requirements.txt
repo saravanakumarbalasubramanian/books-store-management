@@ -37,11 +37,11 @@ Books  // GET API
  => add new book // done
 
  PUT API
- => update book title // done
- => update / add new author //done
+ => update book title // done //mongose
+ => update / add new author //done //mongoose
  
  DELETE API 
- => delete a book // done
+ => delete a book // done //mongoose
  => delete an author from the book and delete a book form the author's book // done
 -------------------------------------------------------------------------------------- authors
 Authors // GET API 
